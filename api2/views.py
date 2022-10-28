@@ -27,11 +27,12 @@ viewset으로 api 만들기
 Generic Views로 api 만들기
 """
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from api2.serializers import CommentSerializer, PostLikeSerializer, PostListSerializer, PostRetrieveSerializer
+from api2.serializers import CateTagSerializer, CommentSerializer, PostLikeSerializer, PostListSerializer, PostRetrieveSerializer
 
-from blog.models import Comment, Post
+from blog.models import Category, Comment, Post, Tag
 
 
 class PostListAPIView(ListAPIView):
@@ -69,3 +70,16 @@ class PostLikeAPIView(UpdateAPIView):
 
             # return Response(serializer.data)
             return Response(data['like'])
+
+
+class CateTagAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        cateList = Category.objects.all()
+        tagList = Tag.objects.all()
+        data = {
+            'cateList': cateList,
+            'tagList' : tagList,
+        }
+
+        serializer = CateTagSerializer(instance=data)
+        return Response(serializer.data)
